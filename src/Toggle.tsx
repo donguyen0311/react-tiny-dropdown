@@ -41,7 +41,7 @@ const DropdownToggle: React.FC<DropdownToggleProps> = props => {
     cursor: pointer;
     border-radius: 0.375rem;
     background-color: #ffffff;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
     font-weight: 500;
   `;
 
@@ -61,5 +61,7 @@ DropdownToggle.defaultProps = {
   disabled: false,
   label: 'Dropdown',
 };
+
+DropdownToggle.displayName = 'DropdownToggle';
 
 export default DropdownToggle;

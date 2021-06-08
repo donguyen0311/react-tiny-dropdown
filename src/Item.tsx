@@ -41,4 +41,6 @@ const DropdownItem: React.FC<DropdownItemProps> = props => {
   );
 };
 
+DropdownItem.displayName = 'DropdownItem';
+
 export default DropdownItem;

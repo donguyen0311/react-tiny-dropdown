@@ -6,7 +6,7 @@ import Dropdown from '../.';
 const App = () => {
   return (
     <div>
-      <Dropdown uncontrolled style={{width: 300}} show={true} label={"Options"}>
+      <Dropdown uncontrolled style={{ width: 300 }} label={'Options'}>
         <Dropdown.Item>Account</Dropdown.Item>
         <Dropdown.Item>Support</Dropdown.Item>
         <Dropdown.Item>Sign out</Dropdown.Item>

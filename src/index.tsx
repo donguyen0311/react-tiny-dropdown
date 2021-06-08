@@ -3,13 +3,13 @@ import * as React from 'react';
 import { jsx, css } from '@emotion/core';
 import debounce from 'lodash.debounce';
 
-import { checkBottomPosition } from './utils';
+import { checkBottomPosition, checkRightPosition } from './utils';
 import DropdownItem from './Item';
 import DropdownToggle from './Toggle';
 import DropdownMenu from './Menu';
 
 interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
-  show: boolean;
+  show?: boolean;
   label: React.ReactNode;
   disabled?: boolean;
   onClose?: () => void;
@@ -29,9 +29,11 @@ const Dropdown: React.FC<DropdownProps> = props => {
     icon,
     ...otherProps
   } = props;
-  const [isOpen, setOpen] = React.useState<boolean>(show);
-  const [isBottom, setBottom] = React.useState<boolean>(false);
+  const [isOpen, setOpen] = React.useState<boolean>(show || false);
+  const [isBottomPosition, setBottomPosition] = React.useState<boolean>(false);
+  const [isRightPosition, setRightPosition] = React.useState<boolean>(false);
   const refDropdown = React.useRef<HTMLDivElement>(null);
+  const refMenu = React.useRef<HTMLDivElement>(null);
 
   const handleClickOutside = React.useCallback(
     event => {
@@ -53,17 +55,19 @@ const Dropdown: React.FC<DropdownProps> = props => {
 
   const handleScroll = React.useCallback(
     debounce(() => {
-      if (refDropdown.current) {
-        let isBottom = checkBottomPosition(refDropdown.current);
+      if (refDropdown.current && refMenu.current) {
+        let isBottom = checkBottomPosition(refDropdown.current, refMenu.current);
+        setBottomPosition(isBottom);
 
-        setBottom(isBottom);
+        let isRight = checkRightPosition(refDropdown.current);
+        setRightPosition(isRight);
       }
     }, 50),
     [checkBottomPosition]
   );
 
   React.useEffect(() => {
-    setOpen(show);
+    setOpen(show || false);
   }, [show]);
 
   React.useEffect(() => {
@@ -100,7 +104,7 @@ const Dropdown: React.FC<DropdownProps> = props => {
         label={label}
       />
       {isShowMenu ? (
-        <DropdownMenu isBottom={isBottom}>
+        <DropdownMenu ref={refMenu} isBottom={isBottomPosition} isRight={isRightPosition}>
           {React.Children.map(props.children, (childNode: any) => {
             return !!childNode
               ? React.cloneElement(childNode, {
@@ -118,6 +122,7 @@ Dropdown.defaultProps = {
   show: false,
   onClose: () => {},
   disabled: false,
+  uncontrolled: true
 };
 
 export default Object.assign(Dropdown, {
